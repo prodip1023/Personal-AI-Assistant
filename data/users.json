@@ -1,1 +1,10 @@
-{}
+{
+  "prodip": {
+    "salt": "3bf4e57916674702",
+    "password": "32490ee07ba544403b314268f445eba82a706864c8bfe23a7d73f3d3f0d4d929"
+  },
+  "test@gmail.com": {
+    "salt": "87924606b4131a8a",
+    "password": "ef41af46d733437df079f60ad7310503a5aec26b5641918fb3fb0c0be4f040c0"
+  }
+}
