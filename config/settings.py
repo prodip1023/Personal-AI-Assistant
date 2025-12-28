@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  
 
 
 class APIKey:
@@ -9,3 +12,4 @@ class APIKey:
 
     def load_api_key(self):
         return self.api_key
+

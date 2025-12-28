@@ -5,17 +5,22 @@ from typing import List, Dict
 def export_pdf(
     history: List[Dict],
     filename: str = "chat.pdf",
-    font: str = "Helvetica",
-    size: int = 13
+    font_path: str = "utils\\fonts\\DejaVuSans.ttf",
+    size: int = 12
 ):
     pdf = FPDF()
-    pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
 
-    pdf.set_font(font, size=size)
+    # Add Unicode font
+    pdf.add_font("DejaVu", "", font_path, uni=True)
+    pdf.set_font("DejaVu", size=size)
 
     for msg in history:
-        pdf.multi_cell(0, 8, f"{msg['role'].upper()}: {msg['message']}")
+        role = msg.get("role", "user").upper()
+        text = msg.get("message", "")
+
+        pdf.multi_cell(0, 8, f"{role}: {text}")
         pdf.ln(2)
 
     pdf.output(filename)

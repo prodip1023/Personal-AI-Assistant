@@ -53,38 +53,89 @@ if st.session_state.current_chat_id not in st.session_state.all_chats:
 # ==========================
 st.markdown("""
 <style>
-body {
+
+/* App background */
+.stApp {
+    background-color: #F8FAFC;
+    color: #0F172A;
     font-family: 'Inter', sans-serif;
 }
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #0F172A;
+    color: #E5E7EB;
+}
+
+/* Sidebar text */
+section[data-testid="stSidebar"] * {
+    color: #E5E7EB !important;
+}
+
+/* Chat bubbles */
 .chat-user {
-    background: #DCF2FF;
+    background: linear-gradient(135deg, #38BDF8, #0EA5E9);
+    color: #FFFFFF;
     padding: 12px 16px;
-    border-radius: 12px;
+    border-radius: 16px 16px 0 16px;
     margin: 8px 0;
     max-width: 75%;
     margin-left: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
+
+/* AI message */
 .chat-ai {
-    background: #F3F4F6;
+    background: #FFFFFF;
+    color: #0F172A;
     padding: 12px 16px;
-    border-radius: 12px;
+    border-radius: 16px 16px 16px 0;
     margin: 8px 0;
     max-width: 75%;
     margin-right: auto;
-}
-.sidebar-card {
-    background: #FFFFFF;
-    padding: 12px;
-    border-radius: 10px;
     border: 1px solid #E5E7EB;
-    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
 }
+
+/* Sidebar card */
+.sidebar-card {
+    background: #020617;
+    color: #E5E7EB;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #1E293B;
+    margin-bottom: 12px;
+}
+
+/* Title */
 .title {
     font-size: 2rem;
     font-weight: 600;
+    color: #020617;
 }
+
+/* Buttons */
+.stButton > button {
+    background: linear-gradient(135deg, #2563EB, #1D4ED8);
+    color: white;
+    border-radius: 10px;
+    border: none;
+    padding: 8px 14px;
+}
+
+.stButton > button:hover {
+    background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+}
+
+/* Input box */
+textarea {
+    background-color: #FFFFFF !important;
+    color: #020617 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 
 
 auth = AuthManager()
@@ -114,7 +165,7 @@ if not st.session_state.login:
                 st.error("Invalid credentials")
 
     with tab2:
-        new_user = st.text_input("New username",key="reg_user",placeholder="Select new username")
+        new_user = st.text_input("New email",key="reg_user",placeholder="Select new email")
         new_pass = st.text_input("Password", type="password",key="reg_pass",placeholder="Enter password")
         confirm_pass = st.text_input("Confirm Password", type="password",key="confirm_pass",placeholder="Enter confirm password")
         if st.button("Register", use_container_width=True):
@@ -167,7 +218,7 @@ with st.sidebar:
     if st.button("Export PDF"):
         export_pdf(Memory().get_history())
     if st.button("Export TXT"):
-        export_txt(Memory().get_history())
+        export_text(Memory().get_history())
 
     if st.button("Logout", type="primary"):
         st.session_state.clear()
