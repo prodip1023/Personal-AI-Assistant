@@ -54,7 +54,7 @@ Personal AI Assistant
 [![Watch the video](assets/Capture.png)](https://drive.google.com/file/d/1aBdPU2iAjUg9ICgTZ15aIU_waxnYkqW6/view?usp=sharing)
 
 # Sample Images
-![images](assets/Register.png.png)
+![images](assets/Register.png)
 ![images](assets/Login.png)
 
 
