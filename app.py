@@ -9,6 +9,7 @@ from jarvis.gemini_engine import GeminiEngine
 from config.settings import APIKey
 from utils.voice_input import listen
 from utils.export_chat_pdf import export_pdf,export_text
+from jarvis.assistant import JarvisAssistant
 
 
 # ==========================
@@ -54,87 +55,120 @@ if st.session_state.current_chat_id not in st.session_state.all_chats:
 st.markdown("""
 <style>
 
-/* App background */
-.stApp {
-    background-color: #F8FAFC;
-    color: #0F172A;
+/* -------- GLOBAL -------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* Sidebar */
+/* -------- APP BACKGROUND -------- */
+.stApp {
+    background: linear-gradient(135deg, #EEF2FF, #E0F2FE);
+    color: #334155;
+}
+
+/* -------- SIDEBAR -------- */
 section[data-testid="stSidebar"] {
-    background-color: #0F172A;
-    color: #E5E7EB;
+    background: linear-gradient(180deg, #312E81, #3730A3);
+    border-right: 1px solid #4338CA;
 }
 
 /* Sidebar text */
 section[data-testid="stSidebar"] * {
-    color: #E5E7EB !important;
-}
-
-/* Chat bubbles */
-.chat-user {
-    background: linear-gradient(135deg, #38BDF8, #0EA5E9);
-    color: #FFFFFF;
-    padding: 12px 16px;
-    border-radius: 16px 16px 0 16px;
-    margin: 8px 0;
-    max-width: 75%;
-    margin-left: auto;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-/* AI message */
-.chat-ai {
-    background: #FFFFFF;
-    color: #0F172A;
-    padding: 12px 16px;
-    border-radius: 16px 16px 16px 0;
-    margin: 8px 0;
-    max-width: 75%;
-    margin-right: auto;
-    border: 1px solid #E5E7EB;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    color: #E0E7FF !important;
 }
 
 /* Sidebar card */
 .sidebar-card {
-    background: #020617;
-    color: #E5E7EB;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid #1E293B;
-    margin-bottom: 12px;
+    background: linear-gradient(135deg, #4338CA, #6366F1);
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 10px 25px rgba(67,56,202,0.35);
 }
 
-/* Title */
+/* -------- TITLE -------- */
 .title {
-    font-size: 2rem;
+    font-size: 1.9rem;
     font-weight: 600;
-    color: #020617;
+    color: #3730A3;
+    margin-bottom: 6px;
 }
 
-/* Buttons */
+/* -------- CHAT USER -------- */
+.chat-user {
+    background: linear-gradient(135deg, #06B6D4, #0EA5E9);
+    color: #ECFEFF;
+    padding: 14px 18px;
+    border-radius: 18px 18px 4px 18px;
+    margin: 10px 0;
+    max-width: 72%;
+    margin-left: auto;
+    box-shadow: 0 10px 22px rgba(14,165,233,0.35);
+    font-size: 0.95rem;
+}
+
+/* -------- CHAT AI -------- */
+.chat-ai {
+    background: linear-gradient(135deg, #DDD6FE, #EDE9FE);
+    color: #4C1D95;
+    padding: 14px 18px;
+    border-radius: 18px 18px 18px 4px;
+    margin: 10px 0;
+    max-width: 72%;
+    margin-right: auto;
+    box-shadow: 0 10px 22px rgba(139,92,246,0.25);
+    font-size: 0.95rem;
+}
+
+/* -------- BUTTONS -------- */
 .stButton > button {
-    background: linear-gradient(135deg, #2563EB, #1D4ED8);
-    color: white;
-    border-radius: 10px;
+    background: linear-gradient(135deg, #8B5CF6, #6366F1);
+    color: #EEF2FF;
+    border-radius: 12px;
     border: none;
-    padding: 8px 14px;
+    padding: 10px 16px;
+    font-weight: 500;
+    transition: all 0.25s ease;
 }
 
 .stButton > button:hover {
-    background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(99,102,241,0.4);
 }
 
-/* Input box */
+/* -------- INPUT BOX -------- */
 textarea {
-    background-color: #FFFFFF !important;
-    color: #020617 !important;
+    background: linear-gradient(135deg, #E0E7FF, #DBEAFE) !important;
+    color: #3730A3 !important;
+    border-radius: 14px !important;
+    border: 1px solid #A5B4FC !important;
+}
+
+/* -------- FILE UPLOADER -------- */
+section[data-testid="stFileUploader"] {
+    background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px dashed #A78BFA;
+}
+
+/* -------- TABS -------- */
+.stTabs [role="tab"] {
+    background: transparent;
+    color: #6D28D9;
+    font-weight: 500;
+}
+
+.stTabs [aria-selected="true"] {
+    color: #4338CA;
+    border-bottom: 2px solid #6366F1;
 }
 
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
@@ -234,6 +268,11 @@ settings = APIKey()
 engine = GeminiEngine(settings.load_api_key())
 memory = Memory()
 prompt_controller = PromptController(role)
+assistant = JarvisAssistant(
+    engine=engine,
+    prompt_controller=prompt_controller,
+    memory=memory
+)
 
 
 chat_box = st.container()
@@ -256,28 +295,54 @@ with col2:
     if st.button("🎤"):
         user_input = listen()
 
-
 if user_input and not st.session_state.is_processing:
     st.session_state.is_processing = True
 
     if file_text:
         user_input += f"\n\n[File]\n{file_text}"
 
-    memory.add("user", user_input)
-    st.session_state.chat_history.append({"role": "user", "message": user_input})
+    # USER MESSAGE
+    st.session_state.chat_history.append({
+        "role": "user",
+        "message": user_input
+    })
 
-    prompt = prompt_controller.build_prompt(user_input, memory)
+    # AI RESPONSE
+    answer = assistant.respond(user_input)
 
-    response_box = st.empty()
-    answer = ""
+    st.session_state.chat_history.append({
+        "role": "assistant",
+        "message": answer
+    })
 
-    for chunk in engine.stream(prompt):
-        answer += chunk
-        response_box.markdown(f"<div class='chat-ai'>{answer}</div>", unsafe_allow_html=True)
+    st.session_state.all_chats[
+        st.session_state.current_chat_id
+    ]["messages"] = st.session_state.chat_history
 
-    memory.add("assistant", answer)
-    st.session_state.chat_history.append({"role": "assistant", "message": answer})
-
-    st.session_state.all_chats[st.session_state.current_chat_id]["messages"] = st.session_state.chat_history
     st.session_state.is_processing = False
     st.rerun()
+
+# if user_input and not st.session_state.is_processing:
+#     st.session_state.is_processing = True
+
+#     if file_text:
+#         user_input += f"\n\n[File]\n{file_text}"
+
+#     memory.add("user", user_input)
+#     st.session_state.chat_history.append({"role": "user", "message": user_input})
+
+#     prompt = prompt_controller.build_prompt(user_input, memory)
+
+#     response_box = st.empty()
+#     answer = ""
+
+#     for chunk in engine.stream(prompt):
+#         answer += chunk
+#         response_box.markdown(f"<div class='chat-ai'>{answer}</div>", unsafe_allow_html=True)
+
+#     memory.add("assistant", answer)
+#     st.session_state.chat_history.append({"role": "assistant", "message": answer})
+
+#     st.session_state.all_chats[st.session_state.current_chat_id]["messages"] = st.session_state.chat_history
+#     st.session_state.is_processing = False
+#     st.rerun()
