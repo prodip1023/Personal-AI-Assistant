@@ -6,5 +6,9 @@
   "test@gmail.com": {
     "salt": "87924606b4131a8a",
     "password": "ef41af46d733437df079f60ad7310503a5aec26b5641918fb3fb0c0be4f040c0"
+  },
+  "test1@gmail.com": {
+    "salt": "a295fa4e457ca8c7",
+    "password": "bedb01e18d0fe531f819e5882f03dc9c6f3070b754e100c34b93f79cd32daef8"
   }
 }

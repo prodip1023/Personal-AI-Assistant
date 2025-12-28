@@ -322,27 +322,3 @@ if user_input and not st.session_state.is_processing:
     st.session_state.is_processing = False
     st.rerun()
 
-# if user_input and not st.session_state.is_processing:
-#     st.session_state.is_processing = True
-
-#     if file_text:
-#         user_input += f"\n\n[File]\n{file_text}"
-
-#     memory.add("user", user_input)
-#     st.session_state.chat_history.append({"role": "user", "message": user_input})
-
-#     prompt = prompt_controller.build_prompt(user_input, memory)
-
-#     response_box = st.empty()
-#     answer = ""
-
-#     for chunk in engine.stream(prompt):
-#         answer += chunk
-#         response_box.markdown(f"<div class='chat-ai'>{answer}</div>", unsafe_allow_html=True)
-
-#     memory.add("assistant", answer)
-#     st.session_state.chat_history.append({"role": "assistant", "message": answer})
-
-#     st.session_state.all_chats[st.session_state.current_chat_id]["messages"] = st.session_state.chat_history
-#     st.session_state.is_processing = False
-#     st.rerun()
